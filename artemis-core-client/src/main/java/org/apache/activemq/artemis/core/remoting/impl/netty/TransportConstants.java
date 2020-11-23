@@ -103,6 +103,8 @@ public class TransportConstants {
 
    public static final String TRUSTSTORE_PASSWORD_PROP_NAME = "trustStorePassword";
 
+   public static final String SSL_HANDSHAKE_MODE_PROP_NAME = "sslHandshakeMode";
+
    public static final String CRL_PATH_PROP_NAME = "crlPath";
 
    public static final String ENABLED_CIPHER_SUITES_PROP_NAME = "enabledCipherSuites";
@@ -227,6 +229,8 @@ public class TransportConstants {
    public static final String DEFAULT_TRUSTSTORE_PATH = null;
 
    public static final String DEFAULT_TRUSTSTORE_PASSWORD = null;
+
+   public static final String DEFAULT_SSL_HANDSHAKE_MODE = null;
 
    public static final String DEFAULT_CRL_PATH = null;
 
@@ -495,5 +499,4 @@ public class TransportConstants {
       }
       NETTY_VERSION = version;
    }
-
 }

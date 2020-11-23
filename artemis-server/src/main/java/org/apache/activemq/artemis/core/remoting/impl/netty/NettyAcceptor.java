@@ -165,6 +165,8 @@ public class NettyAcceptor extends AbstractAcceptor {
 
    private final String trustStorePassword;
 
+   private final String sslHandshakeMode;
+
    private final String crlPath;
 
    private final String enabledCipherSuites;
@@ -294,6 +296,8 @@ public class NettyAcceptor extends AbstractAcceptor {
 
          trustStorePassword = ConfigurationHelper.getPasswordProperty(TransportConstants.TRUSTSTORE_PASSWORD_PROP_NAME, TransportConstants.DEFAULT_TRUSTSTORE_PASSWORD, configuration, ActiveMQDefaultConfiguration.getPropMaskPassword(), ActiveMQDefaultConfiguration.getPropPasswordCodec());
 
+         sslHandshakeMode = ConfigurationHelper.getStringProperty(TransportConstants.SSL_HANDSHAKE_MODE_PROP_NAME, TransportConstants.DEFAULT_SSL_HANDSHAKE_MODE, configuration);
+
          crlPath = ConfigurationHelper.getStringProperty(TransportConstants.CRL_PATH_PROP_NAME, TransportConstants.DEFAULT_CRL_PATH, configuration);
 
          enabledCipherSuites = ConfigurationHelper.getStringProperty(TransportConstants.ENABLED_CIPHER_SUITES_PROP_NAME, TransportConstants.DEFAULT_ENABLED_CIPHER_SUITES, configuration);
@@ -318,6 +322,7 @@ public class NettyAcceptor extends AbstractAcceptor {
          trustStoreProvider = TransportConstants.DEFAULT_TRUSTSTORE_PROVIDER;
          trustStorePath = TransportConstants.DEFAULT_TRUSTSTORE_PATH;
          trustStorePassword = TransportConstants.DEFAULT_TRUSTSTORE_PASSWORD;
+         sslHandshakeMode = TransportConstants.DEFAULT_SSL_HANDSHAKE_MODE;
          crlPath = TransportConstants.DEFAULT_CRL_PATH;
          enabledCipherSuites = TransportConstants.DEFAULT_ENABLED_CIPHER_SUITES;
          enabledProtocols = TransportConstants.DEFAULT_ENABLED_PROTOCOLS;
@@ -531,8 +536,6 @@ public class NettyAcceptor extends AbstractAcceptor {
          engine = loadJdkSslEngine(peerHost, peerPort);
       }
 
-      engine.setUseClientMode(false);
-
       if (needClientAuth) {
          engine.setNeedClientAuth(true);
       } else if (wantClientAuth) {
@@ -626,6 +629,12 @@ public class NettyAcceptor extends AbstractAcceptor {
             }
          }
       });
+      if (sslHandshakeMode != null && sslHandshakeMode.equals("client")) {
+         engine.setUseClientMode(true);
+         engine.setNeedClientAuth(true);
+      } else {
+         engine.setUseClientMode(false);
+      }
       return engine;
    }
 
@@ -633,8 +642,12 @@ public class NettyAcceptor extends AbstractAcceptor {
       if (configuration.containsKey(TransportConstants.SSL_CONTEXT_PROP_NAME)) {
          return;
       }
-      if (kerb5Config == null && keyStorePath == null && TransportConstants.DEFAULT_TRUSTSTORE_PROVIDER.equals(keyStoreProvider)) {
-         throw new IllegalArgumentException("If \"" + TransportConstants.SSL_ENABLED_PROP_NAME + "\" is true then \"" + TransportConstants.KEYSTORE_PATH_PROP_NAME + "\" must be non-null " + "unless an alternative \"" + TransportConstants.KEYSTORE_PROVIDER_PROP_NAME + "\" has been specified.");
+      if (kerb5Config == null && keyStorePath == null
+              && TransportConstants.DEFAULT_TRUSTSTORE_PROVIDER.equals(keyStoreProvider)
+              && (TransportConstants.DEFAULT_SSL_HANDSHAKE_MODE.equals(null)
+                  || TransportConstants.DEFAULT_SSL_HANDSHAKE_MODE.equals("server"))
+      ) {
+         throw new IllegalArgumentException("If \"" + TransportConstants.SSL_ENABLED_PROP_NAME + "\" is true and ssl handshake mode is server then \"" + TransportConstants.KEYSTORE_PATH_PROP_NAME + "\" must be non-null " + "unless an alternative \"" + TransportConstants.KEYSTORE_PROVIDER_PROP_NAME + "\" has been specified.");
       }
    }
 
@@ -673,6 +686,7 @@ public class NettyAcceptor extends AbstractAcceptor {
             }
          }
       });
+      engine.setUseClientMode(false);
       return engine;
    }
 
