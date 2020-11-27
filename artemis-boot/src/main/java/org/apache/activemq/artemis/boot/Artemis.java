@@ -40,6 +40,7 @@ public class Artemis {
    private static final Logger logger = Logger.getLogger(Artemis.class.getName());
 
    public static void main(String[] args) throws Throwable {
+
       String home = System.getProperty("artemis.home");
 
       File fileHome = home != null ? new File(home) : null;

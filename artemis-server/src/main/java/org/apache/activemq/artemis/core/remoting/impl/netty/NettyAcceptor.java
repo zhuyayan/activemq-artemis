@@ -642,11 +642,8 @@ public class NettyAcceptor extends AbstractAcceptor {
       if (configuration.containsKey(TransportConstants.SSL_CONTEXT_PROP_NAME)) {
          return;
       }
-      if (kerb5Config == null && keyStorePath == null
-              && TransportConstants.DEFAULT_TRUSTSTORE_PROVIDER.equals(keyStoreProvider)
-              && (TransportConstants.DEFAULT_SSL_HANDSHAKE_MODE.equals(null)
-                  || TransportConstants.DEFAULT_SSL_HANDSHAKE_MODE.equals("server"))
-      ) {
+      if ((sslHandshakeMode == null || sslHandshakeMode.equals("server")) && kerb5Config == null && keyStorePath == null
+              && TransportConstants.DEFAULT_TRUSTSTORE_PROVIDER.equals(keyStoreProvider)) {
          throw new IllegalArgumentException("If \"" + TransportConstants.SSL_ENABLED_PROP_NAME + "\" is true and ssl handshake mode is server then \"" + TransportConstants.KEYSTORE_PATH_PROP_NAME + "\" must be non-null " + "unless an alternative \"" + TransportConstants.KEYSTORE_PROVIDER_PROP_NAME + "\" has been specified.");
       }
    }

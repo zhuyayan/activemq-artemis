@@ -40,11 +40,7 @@ import org.apache.activemq.artemis.core.settings.HierarchicalRepository;
 import org.apache.activemq.artemis.core.settings.HierarchicalRepositoryChangeListener;
 import org.apache.activemq.artemis.logs.AuditLogger;
 import org.apache.activemq.artemis.spi.core.protocol.RemotingConnection;
-import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager;
-import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager2;
-import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager3;
-import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager4;
-import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager5;
+import org.apache.activemq.artemis.spi.core.security.*;
 import org.apache.activemq.artemis.spi.core.security.jaas.UserPrincipal;
 import org.apache.activemq.artemis.utils.CompositeAddress;
 import org.apache.activemq.artemis.utils.collections.ConcurrentHashSet;
@@ -172,6 +168,7 @@ public class SecurityStoreImpl implements SecurityStore, HierarchicalRepositoryC
          if (check) {
             if (securityManager instanceof ActiveMQSecurityManager5) {
                Subject subject = ((ActiveMQSecurityManager5) securityManager).authenticate(user, password, connection, securityDomain);
+               String key = createAuthenticationCacheKey(user, password, connection);
                authenticationCache.put(createAuthenticationCacheKey(user, password, connection), new Pair<>(subject != null, subject));
                validatedUser = getUserFromSubject(subject);
             } else if (securityManager instanceof ActiveMQSecurityManager4) {

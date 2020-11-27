@@ -386,6 +386,7 @@ public class TransportConstants {
       allowableAcceptorKeys.add(TransportConstants.PORT_PROP_NAME);
       allowableAcceptorKeys.add(TransportConstants.KEYSTORE_PROVIDER_PROP_NAME);
       allowableAcceptorKeys.add(TransportConstants.KEYSTORE_PATH_PROP_NAME);
+      allowableAcceptorKeys.add(TransportConstants.SSL_HANDSHAKE_MODE_PROP_NAME);
       allowableAcceptorKeys.add(TransportConstants.KEYSTORE_PASSWORD_PROP_NAME);
       allowableAcceptorKeys.add(TransportConstants.TRUSTSTORE_PROVIDER_PROP_NAME);
       allowableAcceptorKeys.add(TransportConstants.TRUSTSTORE_PATH_PROP_NAME);

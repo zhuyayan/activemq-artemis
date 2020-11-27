@@ -150,6 +150,8 @@ public class ActiveMQJAASSecurityManager implements ActiveMQSecurityManager5 {
             throw e;
          }
          return lc.getSubject();
+      } catch (Exception ex) {
+         throw ex;
       } finally {
          if (thisLoader != currentLoader) {
             Thread.currentThread().setContextClassLoader(currentLoader);
